@@ -4,7 +4,7 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var Sighting = require('./Models/Sighting');
-
+var controller = require('./ServerAssets/controllers/controller');
 
 var app = express();
 
@@ -16,33 +16,15 @@ app.use(bodyParser.json());
 
 //endpoints
 
+app.get('/sightings', controller.get);
 
-app.get('/', function (req, res) {
-  res.status(200).send('hey hey hey');
-})
+app.get('/sightings/:id', controller.getOne);
 
-app.post('/sightings', function (req, res) {
-  var sighting = new Sighting(req.body);
-  sighting.save().then(function (err, result) {
-    if (!err) {
-      return res.status(201).end();
-    } else {
-      console.log(err);
-      res.json(err);
-    }
-  });
-});
+app.post('/sightings', controller.post);
 
-app.get('/sightings', function (req, res) {
-  Sighting.find(req.query).exec().then(function (sightings) {
-    return res.json(sightings);
-  })
-});
+app.put('/sightings/:id', controller.put);
 
-
-
-
-
+app.delete('/sightings/:id', controller.delete);
 
 app.listen(3000);
 
